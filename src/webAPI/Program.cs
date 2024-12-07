@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Application.Validators;
 using Domain.Entities;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using Infrastructure.Persistence;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -17,6 +18,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+builder.Services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateProductCommandValidator>());
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
