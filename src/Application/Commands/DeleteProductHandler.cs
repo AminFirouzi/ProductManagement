@@ -26,7 +26,6 @@ namespace Application.Commands
             var validationResult = await _validator.ValidateAsync(request, cancellationToken);
             if (!validationResult.IsValid)
             {
-                // Handle validation failure (e.g., throw an exception or return error)
                 throw new ValidationException(validationResult.Errors);
             }
 
@@ -36,7 +35,6 @@ namespace Application.Commands
                 throw new KeyNotFoundException("Product not found.");
             }
 
-            // Proceed to delete the product if validation passes
             await _productRepository.DeleteProductAsync(product);
             return Unit.Value;
         }
