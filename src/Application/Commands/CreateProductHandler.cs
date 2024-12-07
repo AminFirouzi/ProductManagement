@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
+using FluentValidation;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -12,14 +13,24 @@ namespace Application.Commands
     public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand>
     {
         private readonly IProductRepository _productRepository;
+        private readonly IValidator<CreateProductCommand> _validator;
 
-        public CreateProductCommandHandler(IProductRepository productRepository)
+        public CreateProductCommandHandler(IProductRepository productRepository, IValidator<CreateProductCommand> validator)
         {
             _productRepository = productRepository;
+            _validator = validator;
         }
 
-         Task IRequestHandler<CreateProductCommand>.Handle(CreateProductCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
+            // Validate the request using the validator
+            var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+            if (!validationResult.IsValid)
+            {
+                // Handle validation failure (e.g., throw an exception or return error)
+                throw new ValidationException(validationResult.Errors);
+            }
+
             var product = new Product
             {
                 Name = request.Name,
@@ -29,8 +40,13 @@ namespace Application.Commands
                 IsAvailable = request.IsAvailable
             };
 
-            return _productRepository.AddProductAsync(product)
-                .ContinueWith(_ => Unit.Value, cancellationToken);
+            await _productRepository.AddProductAsync(product);
+            return Unit.Value;
+        }
+
+        Task IRequestHandler<CreateProductCommand>.Handle(CreateProductCommand request, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }
