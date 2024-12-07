@@ -1,11 +1,10 @@
-﻿namespace Domain.Entities
-{
-    public class User
-    {
-        // Primary Key: Email
-        public string Email { get; set; } = string.Empty;
+﻿using Microsoft.AspNetCore.Identity;
 
-        // Navigation Property: One User can have many Products
+namespace Domain.Entities
+{
+    public class User: IdentityUser
+    {
+        public string Email { get; set; } = string.Empty;
         public virtual ICollection<Product> Products { get; set; } = new List<Product>();
     }
 }
