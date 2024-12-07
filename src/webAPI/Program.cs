@@ -46,10 +46,10 @@ app.MapControllers();
 
 // dynamically create database in case of pending migrations
 
-using var scope = app.Services.CreateScope();
-var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
-var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
-if (pendingMigrations?.Any() == true)
-    await context.Database.MigrateAsync();
+//using var scope = app.Services.CreateScope();
+//var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+//var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
+//if (pendingMigrations?.Any() == true)
+//    await context.Database.MigrateAsync();
 
 app.Run();
